@@ -1,0 +1,119 @@
+{% extends 'base_menu/menu.html' %}
+{% load static %}
+
+{% block title %}Оформление заказа{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Оформление заказа</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'base_menu:checkout' %}">
+                        {% csrf_token %}
+                        
+                        {% if messages %}
+                            <div class="alert alert-danger">
+                                {% for message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="customer_name" class="form-label">Ваше имя *</label>
+                            <input type="text" class="form-control" id="customer_name" name="customer_name" 
+                                   value="{{ user.first_name }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone_number" class="form-label">Номер телефона *</label>
+                            <input type="tel" class="form-control" id="phone_number" name="phone_number" 
+                                   placeholder="+7 (___) ___-__-__" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="delivery_address" class="form-label">Адрес доставки *</label>
+                            <textarea class="form-control" id="delivery_address" name="delivery_address" 
+                                      rows="3" required></textarea>
+                            <small class="text-muted">Укажите полный адрес включая улицу, дом, квартиру</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Примечания к заказу</label>
+                            <textarea class="form-control" id="notes" name="notes" 
+                                      rows="2" placeholder="Любые дополнительные пожелания к заказу"></textarea>
+                        </div>
+                        
+                        <div class="form-text mb-4">* Обязательные поля</div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Заказать</button>
+                            <a href="{% url 'base_menu:menu' %}" class="btn btn-outline-secondary">Вернуться к меню</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Ваш заказ</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for item in cart_items %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ item.product.img.url }}" alt="{{ item.product.name }}" 
+                                         class="rounded me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <div>
+                                        <h6 class="mb-0">{{ item.product.name }}</h6>
+                                        <small class="text-muted">{{ item.quantity }} x {{ item.product.price }} ₽</small>
+                                    </div>
+                                </div>
+                                <span class="fw-bold">{{ item.get_total_price }} ₽</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <div class="card-footer bg-light">
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Итого:</span>
+                            <span>{{ total_price }} ₽</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Информация о доставке</h5>
+                    <p class="card-text">Время доставки: 30-60 минут</p>
+                    <p class="card-text">Стоимость доставки включена в цену</p>
+                    <p class="card-text mb-0">Оплата производится при получении</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Добавить маску для телефона
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneInput = document.getElementById('phone_number');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+                e.target.value = !x[2] ? x[1] : '+' + x[1] + ' (' + x[2] + ') ' + (x[3] ? x[3] + '-' : '') + (x[4] ? x[4] + '-' : '') + x[5];
+            });
+        }
+    });
+</script>
+{% endblock %}

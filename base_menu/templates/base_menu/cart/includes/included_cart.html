@@ -1,0 +1,96 @@
+{% load static %}
+<input type="checkbox" id="cart-checkbox" />
+<div class="cart-container" id="cart-container">
+    <div class="cart-preview card mb-3 text-bg-light shadow-lg" id="cart-preview">
+        <div class="cart-preview-header card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Корзина</h5>
+            <button class="close-cart-button btn btn-sm btn-outline-dark" id="close-cart-button">&times;</button>
+        </div>
+        <div class="cart-preview-items" id="cart-preview-items">
+            {% if cart_items %}
+                {% for item in cart_items %}
+                    <div class="card mb-2 cart-item" data-item-id="{{ item.id }}">
+                        <div class="card-header d-flex align-items-center">
+                            <div class="cart-item-image me-2">
+                                <img src="{{ item.product.img.url }}" alt="{{ item.product.name }}" width="50" height="50" class="rounded">
+                            </div>
+                            <h6 class="card-title mb-0">{{ item.product.name }}</h6>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="row text-center align-items-center">
+                                    <div class="col-4">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-dark btn-sm cart-item-decrease"
+                                                    data-cart-item-id="{{ item.id }}">
+                                                    -
+                                                </button>
+                                            </span>
+                                            <input type="text" class="form-control number text-center"
+                                                   value="{{ item.quantity }}" readonly>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-dark btn-sm cart-item-increase"
+                                                    data-cart-item-id="{{ item.id }}">
+                                                    +
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="mb-0">{{ item.product.price }} ₽</p>
+                                    </div>
+                                    <div class="col-3">
+                                        <strong>{{ item.get_total_price }} ₽</strong>
+                                    </div>
+                                    <div class="col-1">
+                                        <button class="btn btn-sm btn-danger cart-item-remove" 
+                                            data-cart-item-id="{{ item.id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="card-body text-center">
+                    <p class="mb-0 text-dark">Ваша корзина пуста</p>
+                </div>
+            {% endif %}
+        </div>
+        <div class="cart-preview-footer card-footer d-flex justify-content-between align-items-center">
+            <div>
+                <p class="mb-0 text-dark">Итого: <strong>{{ total_quantity|default:"0" }}</strong> товар(а) на сумму</p>
+            </div>
+            <div>
+                <h4 class="mb-0"><strong><span id="cart-total">{{ total_price|default:"0" }}</span> ₽</strong></h4>
+            </div>
+        </div>
+        {% if cart_items %}
+            <div class="card-footer">
+                <a href="{% url 'base_menu:checkout' %}" class="btn btn-success w-100">Оформить заказ</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Всплывающее окно для неавторизованных пользователей -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Требуется авторизация</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Для управления корзиной необходимо войти в систему или зарегистрироваться.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'login' %}" class="btn btn-primary">Войти</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+</div>

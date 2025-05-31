@@ -1,0 +1,49 @@
+body {
+    background-color: #222226; /* Темный фон */
+    text-align: center; /* Центрируем текст в body */
+}
+
+.container {
+    max-width: 500px;
+    margin: 50px auto; /* Горизонтальное центрирование */
+    padding: 30px;
+    background-color: #474A51; /* Белый контейнер */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left; /* Возвращаем выравнивание по левому краю для содержимого контейнера */
+}
+
+h1 {
+    text-align: center; /* Убедимся, что заголовок по-прежнему по центру */
+    margin-bottom: 20px;
+    color: #fff; /* Темный цвет заголовка */
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left; /* Выравниваем текст слева внутри form-group */
+}
+
+label {
+    font-weight: bold;
+    color: #fff; /* Темный цвет подписей */
+}
+
+.btn-primary {
+    background-color:  #E32636; /* Синяя кнопка */
+    border-color: #007bff;
+    padding: 0.5rem 1rem; /* Уменьшаем padding */
+    font-size: 0.9rem; /* Уменьшаем размер шрифта */
+}
+
+.btn-primary:hover {
+    background-color: #B00000; /* Более темный синий при наведении */
+    border-color:  #9B2D30;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
+    color: #fff;
+
+}
